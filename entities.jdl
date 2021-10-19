@@ -20,7 +20,7 @@ entity Block{
 entity Transaction{
    hash String
    sender String
-   reciepent String
+   recipient String
    value Double
    signature String
    timestamp Instant
@@ -30,4 +30,9 @@ entity Transaction{
 entity Wallet{
     privateKey String
     publicKey String
+}
+
+relationship OneToMany{
+
+    Block{transaction} to Transaction{block required}
 }

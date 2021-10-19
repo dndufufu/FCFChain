@@ -18,6 +18,7 @@ public class TransactionInput implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "transaction_output_id")
@@ -27,17 +28,18 @@ public class TransactionInput implements Serializable {
     private String uTXO;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public TransactionInput id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public TransactionInput id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getTransactionOutputId() {
@@ -45,7 +47,7 @@ public class TransactionInput implements Serializable {
     }
 
     public TransactionInput transactionOutputId(String transactionOutputId) {
-        this.transactionOutputId = transactionOutputId;
+        this.setTransactionOutputId(transactionOutputId);
         return this;
     }
 
@@ -58,7 +60,7 @@ public class TransactionInput implements Serializable {
     }
 
     public TransactionInput uTXO(String uTXO) {
-        this.uTXO = uTXO;
+        this.setuTXO(uTXO);
         return this;
     }
 

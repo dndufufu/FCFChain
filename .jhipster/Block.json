@@ -26,7 +26,14 @@
       "fieldType": "Integer"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "transaction",
+      "otherEntityRelationshipName": "block",
+      "relationshipName": "transaction"
+    }
+  ],
   "entityTableName": "block",
   "dto": "no",
   "pagination": "no",

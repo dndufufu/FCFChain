@@ -56,7 +56,7 @@ export const Transaction = (props: RouteComponentProps<{ url: string }>) => {
                   <Translate contentKey="chainApp.transaction.sender">Sender</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="chainApp.transaction.reciepent">Reciepent</Translate>
+                  <Translate contentKey="chainApp.transaction.recipient">Recipient</Translate>
                 </th>
                 <th>
                   <Translate contentKey="chainApp.transaction.value">Value</Translate>
@@ -69,6 +69,9 @@ export const Transaction = (props: RouteComponentProps<{ url: string }>) => {
                 </th>
                 <th>
                   <Translate contentKey="chainApp.transaction.status">Status</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="chainApp.transaction.block">Block</Translate>
                 </th>
                 <th />
               </tr>
@@ -83,13 +86,14 @@ export const Transaction = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{transaction.hash}</td>
                   <td>{transaction.sender}</td>
-                  <td>{transaction.reciepent}</td>
+                  <td>{transaction.recipient}</td>
                   <td>{transaction.value}</td>
                   <td>{transaction.signature}</td>
                   <td>
                     {transaction.timestamp ? <TextFormat type="date" value={transaction.timestamp} format={APP_DATE_FORMAT} /> : null}
                   </td>
                   <td>{transaction.status ? 'true' : 'false'}</td>
+                  <td>{transaction.block ? <Link to={`block/${transaction.block.id}`}>{transaction.block.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${transaction.id}`} color="info" size="sm" data-cy="entityDetailsButton">

@@ -18,6 +18,7 @@ public class TransactionOutput implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "recipient")
@@ -30,17 +31,18 @@ public class TransactionOutput implements Serializable {
     private String parentTransactionId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public TransactionOutput id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public TransactionOutput id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getRecipient() {
@@ -48,7 +50,7 @@ public class TransactionOutput implements Serializable {
     }
 
     public TransactionOutput recipient(String recipient) {
-        this.recipient = recipient;
+        this.setRecipient(recipient);
         return this;
     }
 
@@ -61,7 +63,7 @@ public class TransactionOutput implements Serializable {
     }
 
     public TransactionOutput value(Double value) {
-        this.value = value;
+        this.setValue(value);
         return this;
     }
 
@@ -74,7 +76,7 @@ public class TransactionOutput implements Serializable {
     }
 
     public TransactionOutput parentTransactionId(String parentTransactionId) {
-        this.parentTransactionId = parentTransactionId;
+        this.setParentTransactionId(parentTransactionId);
         return this;
     }
 

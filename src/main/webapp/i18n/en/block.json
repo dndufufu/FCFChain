@@ -23,7 +23,8 @@
       "merkleRoot": "Merkle Root",
       "timestamp": "Timestamp",
       "nonce": "Nonce",
-      "tradingVolume": "Trading Volume"
+      "tradingVolume": "Trading Volume",
+      "transaction": "Transaction"
     }
   }
 }

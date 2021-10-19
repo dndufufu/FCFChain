@@ -10,7 +10,7 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "reciepent",
+      "fieldName": "recipient",
       "fieldType": "String"
     },
     {
@@ -30,7 +30,15 @@
       "fieldType": "Boolean"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "block",
+      "otherEntityRelationshipName": "transaction",
+      "relationshipValidateRules": "required",
+      "relationshipName": "block"
+    }
+  ],
   "entityTableName": "transaction",
   "dto": "no",
   "pagination": "no",

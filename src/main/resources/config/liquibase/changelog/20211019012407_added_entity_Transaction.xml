@@ -3,7 +3,7 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
@@ -20,7 +20,7 @@
             <column name="sender" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="reciepent" type="varchar(255)">
+            <column name="recipient" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="value" type="double">
@@ -34,6 +34,9 @@
             </column>
             <column name="status" type="boolean">
                 <constraints nullable="true" />
+            </column>
+            <column name="block_id" type="bigint">
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
@@ -54,15 +57,17 @@
         <loadData
                   file="config/liquibase/fake-data/transaction.csv"
                   separator=";"
-                  tableName="transaction">
+                  tableName="transaction"
+                  usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="hash" type="string"/>
             <column name="sender" type="string"/>
-            <column name="reciepent" type="string"/>
+            <column name="recipient" type="string"/>
             <column name="value" type="numeric"/>
             <column name="signature" type="string"/>
-            <column name="timestamp" type="${datetimeType}"/>
+            <column name="timestamp" type="date"/>
             <column name="status" type="boolean"/>
+            <column name="block_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

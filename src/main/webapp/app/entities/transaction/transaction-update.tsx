@@ -4,6 +4,8 @@ import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { IBlock } from 'app/shared/model/block.model';
+import { getEntities as getBlocks } from 'app/entities/block/block.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './transaction.reducer';
 import { ITransaction } from 'app/shared/model/transaction.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -15,6 +17,7 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
+  const blocks = useAppSelector(state => state.block.entities);
   const transactionEntity = useAppSelector(state => state.transaction.entity);
   const loading = useAppSelector(state => state.transaction.loading);
   const updating = useAppSelector(state => state.transaction.updating);
@@ -30,6 +33,8 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
     } else {
       dispatch(getEntity(props.match.params.id));
     }
+
+    dispatch(getBlocks({}));
   }, []);
 
   useEffect(() => {
@@ -44,6 +49,7 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
     const entity = {
       ...transactionEntity,
       ...values,
+      block: blocks.find(it => it.id.toString() === values.blockId.toString()),
     };
 
     if (isNew) {
@@ -61,6 +67,7 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
       : {
           ...transactionEntity,
           timestamp: convertDateTimeFromServer(transactionEntity.timestamp),
+          blockId: transactionEntity?.block?.id,
         };
 
   return (
@@ -97,10 +104,10 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
                 type="text"
               />
               <ValidatedField
-                label={translate('chainApp.transaction.reciepent')}
-                id="transaction-reciepent"
-                name="reciepent"
-                data-cy="reciepent"
+                label={translate('chainApp.transaction.recipient')}
+                id="transaction-recipient"
+                name="recipient"
+                data-cy="recipient"
                 type="text"
               />
               <ValidatedField
@@ -133,6 +140,26 @@ export const TransactionUpdate = (props: RouteComponentProps<{ id: string }>) =>
                 check
                 type="checkbox"
               />
+              <ValidatedField
+                id="transaction-block"
+                name="blockId"
+                data-cy="block"
+                label={translate('chainApp.transaction.block')}
+                type="select"
+                required
+              >
+                <option value="" key="0" />
+                {blocks
+                  ? blocks.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <FormText>
+                <Translate contentKey="entity.validation.required">This field is required.</Translate>
+              </FormText>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/transaction" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

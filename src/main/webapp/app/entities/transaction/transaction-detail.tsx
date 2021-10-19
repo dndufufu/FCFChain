@@ -42,11 +42,11 @@ export const TransactionDetail = (props: RouteComponentProps<{ id: string }>) =>
           </dt>
           <dd>{transactionEntity.sender}</dd>
           <dt>
-            <span id="reciepent">
-              <Translate contentKey="chainApp.transaction.reciepent">Reciepent</Translate>
+            <span id="recipient">
+              <Translate contentKey="chainApp.transaction.recipient">Recipient</Translate>
             </span>
           </dt>
-          <dd>{transactionEntity.reciepent}</dd>
+          <dd>{transactionEntity.recipient}</dd>
           <dt>
             <span id="value">
               <Translate contentKey="chainApp.transaction.value">Value</Translate>
@@ -73,6 +73,10 @@ export const TransactionDetail = (props: RouteComponentProps<{ id: string }>) =>
             </span>
           </dt>
           <dd>{transactionEntity.status ? 'true' : 'false'}</dd>
+          <dt>
+            <Translate contentKey="chainApp.transaction.block">Block</Translate>
+          </dt>
+          <dd>{transactionEntity.block ? transactionEntity.block.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/transaction" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { ITransaction } from 'app/shared/model/transaction.model';
 
 export interface IBlock {
   id?: number;
@@ -8,6 +9,7 @@ export interface IBlock {
   timestamp?: string | null;
   nonce?: number | null;
   tradingVolume?: number | null;
+  transactions?: ITransaction[] | null;
 }
 
 export const defaultValue: Readonly<IBlock> = {};

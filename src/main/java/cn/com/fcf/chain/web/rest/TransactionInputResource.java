@@ -104,7 +104,7 @@ public class TransactionInputResource {
      * or with status {@code 500 (Internal Server Error)} if the transactionInput couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/transaction-inputs/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/transaction-inputs/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<TransactionInput> partialUpdateTransactionInput(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody TransactionInput transactionInput

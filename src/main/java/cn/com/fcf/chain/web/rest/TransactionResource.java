@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,7 @@ public class TransactionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/transactions")
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) throws URISyntaxException {
+    public ResponseEntity<Transaction> createTransaction(@Valid @RequestBody Transaction transaction) throws URISyntaxException {
         log.debug("REST request to save Transaction : {}", transaction);
         if (transaction.getId() != null) {
             throw new BadRequestAlertException("A new transaction cannot already have an ID", ENTITY_NAME, "idexists");
@@ -71,7 +73,7 @@ public class TransactionResource {
     @PutMapping("/transactions/{id}")
     public ResponseEntity<Transaction> updateTransaction(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Transaction transaction
+        @Valid @RequestBody Transaction transaction
     ) throws URISyntaxException {
         log.debug("REST request to update Transaction : {}, {}", id, transaction);
         if (transaction.getId() == null) {
@@ -103,10 +105,10 @@ public class TransactionResource {
      * or with status {@code 500 (Internal Server Error)} if the transaction couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/transactions/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/transactions/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Transaction> partialUpdateTransaction(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Transaction transaction
+        @NotNull @RequestBody Transaction transaction
     ) throws URISyntaxException {
         log.debug("REST request to partial update Transaction partially : {}, {}", id, transaction);
         if (transaction.getId() == null) {
@@ -130,8 +132,8 @@ public class TransactionResource {
                     if (transaction.getSender() != null) {
                         existingTransaction.setSender(transaction.getSender());
                     }
-                    if (transaction.getReciepent() != null) {
-                        existingTransaction.setReciepent(transaction.getReciepent());
+                    if (transaction.getRecipient() != null) {
+                        existingTransaction.setRecipient(transaction.getRecipient());
                     }
                     if (transaction.getValue() != null) {
                         existingTransaction.setValue(transaction.getValue());

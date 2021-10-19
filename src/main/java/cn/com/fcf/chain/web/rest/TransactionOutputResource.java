@@ -104,7 +104,7 @@ public class TransactionOutputResource {
      * or with status {@code 500 (Internal Server Error)} if the transactionOutput couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/transaction-outputs/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/transaction-outputs/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<TransactionOutput> partialUpdateTransactionOutput(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody TransactionOutput transactionOutput

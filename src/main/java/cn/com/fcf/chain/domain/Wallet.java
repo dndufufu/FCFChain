@@ -18,6 +18,7 @@ public class Wallet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "private_key")
@@ -27,17 +28,18 @@ public class Wallet implements Serializable {
     private String publicKey;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Wallet id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Wallet id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getPrivateKey() {
@@ -45,7 +47,7 @@ public class Wallet implements Serializable {
     }
 
     public Wallet privateKey(String privateKey) {
-        this.privateKey = privateKey;
+        this.setPrivateKey(privateKey);
         return this;
     }
 
@@ -58,7 +60,7 @@ public class Wallet implements Serializable {
     }
 
     public Wallet publicKey(String publicKey) {
-        this.publicKey = publicKey;
+        this.setPublicKey(publicKey);
         return this;
     }
 

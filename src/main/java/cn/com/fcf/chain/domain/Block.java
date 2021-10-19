@@ -1,7 +1,10 @@
 package cn.com.fcf.chain.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -19,6 +22,7 @@ public class Block implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "hash")
@@ -39,18 +43,24 @@ public class Block implements Serializable {
     @Column(name = "trading_volume")
     private Integer tradingVolume;
 
+    @OneToMany(mappedBy = "block")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "block" }, allowSetters = true)
+    private List<Transaction> transactions = new ArrayList<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Block id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Block id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getHash() {
@@ -58,7 +68,7 @@ public class Block implements Serializable {
     }
 
     public Block hash(String hash) {
-        this.hash = hash;
+        this.setHash(hash);
         return this;
     }
 
@@ -71,7 +81,7 @@ public class Block implements Serializable {
     }
 
     public Block previousHash(String previousHash) {
-        this.previousHash = previousHash;
+        this.setPreviousHash(previousHash);
         return this;
     }
 
@@ -84,7 +94,7 @@ public class Block implements Serializable {
     }
 
     public Block merkleRoot(String merkleRoot) {
-        this.merkleRoot = merkleRoot;
+        this.setMerkleRoot(merkleRoot);
         return this;
     }
 
@@ -97,7 +107,7 @@ public class Block implements Serializable {
     }
 
     public Block timestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+        this.setTimestamp(timestamp);
         return this;
     }
 
@@ -110,7 +120,7 @@ public class Block implements Serializable {
     }
 
     public Block nonce(Integer nonce) {
-        this.nonce = nonce;
+        this.setNonce(nonce);
         return this;
     }
 
@@ -123,12 +133,43 @@ public class Block implements Serializable {
     }
 
     public Block tradingVolume(Integer tradingVolume) {
-        this.tradingVolume = tradingVolume;
+        this.setTradingVolume(tradingVolume);
         return this;
     }
 
     public void setTradingVolume(Integer tradingVolume) {
         this.tradingVolume = tradingVolume;
+    }
+
+    public List<Transaction> getTransactions() {
+        return this.transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        if (this.transactions != null) {
+            this.transactions.forEach(i -> i.setBlock(null));
+        }
+        if (transactions != null) {
+            transactions.forEach(i -> i.setBlock(this));
+        }
+        this.transactions = transactions;
+    }
+
+    public Block transactions(List<Transaction> transactions) {
+        this.setTransactions(transactions);
+        return this;
+    }
+
+    public Block addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
+        transaction.setBlock(this);
+        return this;
+    }
+
+    public Block removeTransaction(Transaction transaction) {
+        this.transactions.remove(transaction);
+        transaction.setBlock(null);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

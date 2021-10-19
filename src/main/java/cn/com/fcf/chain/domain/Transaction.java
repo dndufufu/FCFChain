@@ -1,8 +1,10 @@
 package cn.com.fcf.chain.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,6 +21,7 @@ public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "hash")
@@ -27,8 +30,8 @@ public class Transaction implements Serializable {
     @Column(name = "sender")
     private String sender;
 
-    @Column(name = "reciepent")
-    private String reciepent;
+    @Column(name = "recipient")
+    private String recipient;
 
     @Column(name = "value")
     private Double value;
@@ -42,18 +45,24 @@ public class Transaction implements Serializable {
     @Column(name = "status")
     private Boolean status;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "transactions" }, allowSetters = true)
+    private Block block;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Transaction id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Transaction id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getHash() {
@@ -61,7 +70,7 @@ public class Transaction implements Serializable {
     }
 
     public Transaction hash(String hash) {
-        this.hash = hash;
+        this.setHash(hash);
         return this;
     }
 
@@ -74,7 +83,7 @@ public class Transaction implements Serializable {
     }
 
     public Transaction sender(String sender) {
-        this.sender = sender;
+        this.setSender(sender);
         return this;
     }
 
@@ -82,17 +91,17 @@ public class Transaction implements Serializable {
         this.sender = sender;
     }
 
-    public String getReciepent() {
-        return this.reciepent;
+    public String getRecipient() {
+        return this.recipient;
     }
 
-    public Transaction reciepent(String reciepent) {
-        this.reciepent = reciepent;
+    public Transaction recipient(String recipient) {
+        this.setRecipient(recipient);
         return this;
     }
 
-    public void setReciepent(String reciepent) {
-        this.reciepent = reciepent;
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 
     public Double getValue() {
@@ -100,7 +109,7 @@ public class Transaction implements Serializable {
     }
 
     public Transaction value(Double value) {
-        this.value = value;
+        this.setValue(value);
         return this;
     }
 
@@ -113,7 +122,7 @@ public class Transaction implements Serializable {
     }
 
     public Transaction signature(String signature) {
-        this.signature = signature;
+        this.setSignature(signature);
         return this;
     }
 
@@ -126,7 +135,7 @@ public class Transaction implements Serializable {
     }
 
     public Transaction timestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+        this.setTimestamp(timestamp);
         return this;
     }
 
@@ -139,12 +148,25 @@ public class Transaction implements Serializable {
     }
 
     public Transaction status(Boolean status) {
-        this.status = status;
+        this.setStatus(status);
         return this;
     }
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Block getBlock() {
+        return this.block;
+    }
+
+    public void setBlock(Block block) {
+        this.block = block;
+    }
+
+    public Transaction block(Block block) {
+        this.setBlock(block);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -173,7 +195,7 @@ public class Transaction implements Serializable {
             "id=" + getId() +
             ", hash='" + getHash() + "'" +
             ", sender='" + getSender() + "'" +
-            ", reciepent='" + getReciepent() + "'" +
+            ", recipient='" + getRecipient() + "'" +
             ", value=" + getValue() +
             ", signature='" + getSignature() + "'" +
             ", timestamp='" + getTimestamp() + "'" +

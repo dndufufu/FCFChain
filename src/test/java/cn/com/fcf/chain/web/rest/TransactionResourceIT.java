@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import cn.com.fcf.chain.IntegrationTest;
+import cn.com.fcf.chain.domain.Block;
 import cn.com.fcf.chain.domain.Transaction;
 import cn.com.fcf.chain.repository.TransactionRepository;
 import java.time.Instant;
@@ -37,8 +38,8 @@ class TransactionResourceIT {
     private static final String DEFAULT_SENDER = "AAAAAAAAAA";
     private static final String UPDATED_SENDER = "BBBBBBBBBB";
 
-    private static final String DEFAULT_RECIEPENT = "AAAAAAAAAA";
-    private static final String UPDATED_RECIEPENT = "BBBBBBBBBB";
+    private static final String DEFAULT_RECIPIENT = "AAAAAAAAAA";
+    private static final String UPDATED_RECIPIENT = "BBBBBBBBBB";
 
     private static final Double DEFAULT_VALUE = 1D;
     private static final Double UPDATED_VALUE = 2D;
@@ -79,11 +80,21 @@ class TransactionResourceIT {
         Transaction transaction = new Transaction()
             .hash(DEFAULT_HASH)
             .sender(DEFAULT_SENDER)
-            .reciepent(DEFAULT_RECIEPENT)
+            .recipient(DEFAULT_RECIPIENT)
             .value(DEFAULT_VALUE)
             .signature(DEFAULT_SIGNATURE)
             .timestamp(DEFAULT_TIMESTAMP)
             .status(DEFAULT_STATUS);
+        // Add required entity
+        Block block;
+        if (TestUtil.findAll(em, Block.class).isEmpty()) {
+            block = BlockResourceIT.createEntity(em);
+            em.persist(block);
+            em.flush();
+        } else {
+            block = TestUtil.findAll(em, Block.class).get(0);
+        }
+        transaction.setBlock(block);
         return transaction;
     }
 
@@ -97,11 +108,21 @@ class TransactionResourceIT {
         Transaction transaction = new Transaction()
             .hash(UPDATED_HASH)
             .sender(UPDATED_SENDER)
-            .reciepent(UPDATED_RECIEPENT)
+            .recipient(UPDATED_RECIPIENT)
             .value(UPDATED_VALUE)
             .signature(UPDATED_SIGNATURE)
             .timestamp(UPDATED_TIMESTAMP)
             .status(UPDATED_STATUS);
+        // Add required entity
+        Block block;
+        if (TestUtil.findAll(em, Block.class).isEmpty()) {
+            block = BlockResourceIT.createUpdatedEntity(em);
+            em.persist(block);
+            em.flush();
+        } else {
+            block = TestUtil.findAll(em, Block.class).get(0);
+        }
+        transaction.setBlock(block);
         return transaction;
     }
 
@@ -125,7 +146,7 @@ class TransactionResourceIT {
         Transaction testTransaction = transactionList.get(transactionList.size() - 1);
         assertThat(testTransaction.getHash()).isEqualTo(DEFAULT_HASH);
         assertThat(testTransaction.getSender()).isEqualTo(DEFAULT_SENDER);
-        assertThat(testTransaction.getReciepent()).isEqualTo(DEFAULT_RECIEPENT);
+        assertThat(testTransaction.getRecipient()).isEqualTo(DEFAULT_RECIPIENT);
         assertThat(testTransaction.getValue()).isEqualTo(DEFAULT_VALUE);
         assertThat(testTransaction.getSignature()).isEqualTo(DEFAULT_SIGNATURE);
         assertThat(testTransaction.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
@@ -164,7 +185,7 @@ class TransactionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(transaction.getId().intValue())))
             .andExpect(jsonPath("$.[*].hash").value(hasItem(DEFAULT_HASH)))
             .andExpect(jsonPath("$.[*].sender").value(hasItem(DEFAULT_SENDER)))
-            .andExpect(jsonPath("$.[*].reciepent").value(hasItem(DEFAULT_RECIEPENT)))
+            .andExpect(jsonPath("$.[*].recipient").value(hasItem(DEFAULT_RECIPIENT)))
             .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
             .andExpect(jsonPath("$.[*].signature").value(hasItem(DEFAULT_SIGNATURE)))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
@@ -185,7 +206,7 @@ class TransactionResourceIT {
             .andExpect(jsonPath("$.id").value(transaction.getId().intValue()))
             .andExpect(jsonPath("$.hash").value(DEFAULT_HASH))
             .andExpect(jsonPath("$.sender").value(DEFAULT_SENDER))
-            .andExpect(jsonPath("$.reciepent").value(DEFAULT_RECIEPENT))
+            .andExpect(jsonPath("$.recipient").value(DEFAULT_RECIPIENT))
             .andExpect(jsonPath("$.value").value(DEFAULT_VALUE.doubleValue()))
             .andExpect(jsonPath("$.signature").value(DEFAULT_SIGNATURE))
             .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
@@ -214,7 +235,7 @@ class TransactionResourceIT {
         updatedTransaction
             .hash(UPDATED_HASH)
             .sender(UPDATED_SENDER)
-            .reciepent(UPDATED_RECIEPENT)
+            .recipient(UPDATED_RECIPIENT)
             .value(UPDATED_VALUE)
             .signature(UPDATED_SIGNATURE)
             .timestamp(UPDATED_TIMESTAMP)
@@ -234,7 +255,7 @@ class TransactionResourceIT {
         Transaction testTransaction = transactionList.get(transactionList.size() - 1);
         assertThat(testTransaction.getHash()).isEqualTo(UPDATED_HASH);
         assertThat(testTransaction.getSender()).isEqualTo(UPDATED_SENDER);
-        assertThat(testTransaction.getReciepent()).isEqualTo(UPDATED_RECIEPENT);
+        assertThat(testTransaction.getRecipient()).isEqualTo(UPDATED_RECIPIENT);
         assertThat(testTransaction.getValue()).isEqualTo(UPDATED_VALUE);
         assertThat(testTransaction.getSignature()).isEqualTo(UPDATED_SIGNATURE);
         assertThat(testTransaction.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
@@ -325,7 +346,7 @@ class TransactionResourceIT {
         Transaction testTransaction = transactionList.get(transactionList.size() - 1);
         assertThat(testTransaction.getHash()).isEqualTo(DEFAULT_HASH);
         assertThat(testTransaction.getSender()).isEqualTo(UPDATED_SENDER);
-        assertThat(testTransaction.getReciepent()).isEqualTo(DEFAULT_RECIEPENT);
+        assertThat(testTransaction.getRecipient()).isEqualTo(DEFAULT_RECIPIENT);
         assertThat(testTransaction.getValue()).isEqualTo(DEFAULT_VALUE);
         assertThat(testTransaction.getSignature()).isEqualTo(DEFAULT_SIGNATURE);
         assertThat(testTransaction.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
@@ -347,7 +368,7 @@ class TransactionResourceIT {
         partialUpdatedTransaction
             .hash(UPDATED_HASH)
             .sender(UPDATED_SENDER)
-            .reciepent(UPDATED_RECIEPENT)
+            .recipient(UPDATED_RECIPIENT)
             .value(UPDATED_VALUE)
             .signature(UPDATED_SIGNATURE)
             .timestamp(UPDATED_TIMESTAMP)
@@ -367,7 +388,7 @@ class TransactionResourceIT {
         Transaction testTransaction = transactionList.get(transactionList.size() - 1);
         assertThat(testTransaction.getHash()).isEqualTo(UPDATED_HASH);
         assertThat(testTransaction.getSender()).isEqualTo(UPDATED_SENDER);
-        assertThat(testTransaction.getReciepent()).isEqualTo(UPDATED_RECIEPENT);
+        assertThat(testTransaction.getRecipient()).isEqualTo(UPDATED_RECIPIENT);
         assertThat(testTransaction.getValue()).isEqualTo(UPDATED_VALUE);
         assertThat(testTransaction.getSignature()).isEqualTo(UPDATED_SIGNATURE);
         assertThat(testTransaction.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);

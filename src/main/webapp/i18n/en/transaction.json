@@ -20,11 +20,12 @@
       "id": "ID",
       "hash": "Hash",
       "sender": "Sender",
-      "reciepent": "Reciepent",
+      "recipient": "Recipient",
       "value": "Value",
       "signature": "Signature",
       "timestamp": "Timestamp",
-      "status": "Status"
+      "status": "Status",
+      "block": "Block"
     }
   }
 }
