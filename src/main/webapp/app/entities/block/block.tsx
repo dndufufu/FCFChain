@@ -1,26 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntities } from './block.reducer';
 import { IBlock } from 'app/shared/model/block.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const Block = (props: RouteComponentProps<{ url: string }>) => {
   const dispatch = useAppDispatch();
 
+  const [paginationState, setPaginationState] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE, 'id'), props.location.search)
+  );
+
   const blockList = useAppSelector(state => state.block.entities);
   const loading = useAppSelector(state => state.block.loading);
+  const totalItems = useAppSelector(state => state.block.totalItems);
+
+  const getAllEntities = () => {
+    dispatch(
+      getEntities({
+        page: paginationState.activePage - 1,
+        size: paginationState.itemsPerPage,
+        sort: `${paginationState.sort},${paginationState.order}`,
+      })
+    );
+  };
+
+  const sortEntities = () => {
+    getAllEntities();
+    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
+  };
 
   useEffect(() => {
-    dispatch(getEntities({}));
-  }, []);
+    sortEntities();
+  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(props.location.search);
+    const page = params.get('page');
+    const sort = params.get(SORT);
+    if (page && sort) {
+      const sortSplit = sort.split(',');
+      setPaginationState({
+        ...paginationState,
+        activePage: +page,
+        sort: sortSplit[0],
+        order: sortSplit[1],
+      });
+    }
+  }, [props.location.search]);
+
+  const sort = p => () => {
+    setPaginationState({
+      ...paginationState,
+      order: paginationState.order === ASC ? DESC : ASC,
+      sort: p,
+    });
+  };
+
+  const handlePagination = currentPage =>
+    setPaginationState({
+      ...paginationState,
+      activePage: currentPage,
+    });
 
   const handleSyncList = () => {
-    dispatch(getEntities({}));
+    sortEntities();
   };
 
   const { match } = props;
@@ -46,26 +100,26 @@ export const Block = (props: RouteComponentProps<{ url: string }>) => {
           <Table responsive>
             <thead>
               <tr>
-                <th>
-                  <Translate contentKey="chainApp.block.id">ID</Translate>
+                <th className="hand" onClick={sort('id')}>
+                  <Translate contentKey="chainApp.block.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.hash">Hash</Translate>
+                <th className="hand" onClick={sort('hash')}>
+                  <Translate contentKey="chainApp.block.hash">Hash</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.previousHash">Previous Hash</Translate>
+                <th className="hand" onClick={sort('previousHash')}>
+                  <Translate contentKey="chainApp.block.previousHash">Previous Hash</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.merkleRoot">Merkle Root</Translate>
+                <th className="hand" onClick={sort('merkleRoot')}>
+                  <Translate contentKey="chainApp.block.merkleRoot">Merkle Root</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.timestamp">Timestamp</Translate>
+                <th className="hand" onClick={sort('timestamp')}>
+                  <Translate contentKey="chainApp.block.timestamp">Timestamp</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.nonce">Nonce</Translate>
+                <th className="hand" onClick={sort('nonce')}>
+                  <Translate contentKey="chainApp.block.nonce">Nonce</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="chainApp.block.tradingVolume">Trading Volume</Translate>
+                <th className="hand" onClick={sort('tradingVolume')}>
+                  <Translate contentKey="chainApp.block.tradingVolume">Trading Volume</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -92,13 +146,25 @@ export const Block = (props: RouteComponentProps<{ url: string }>) => {
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${block.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${block.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="primary"
+                        size="sm"
+                        data-cy="entityEditButton"
+                      >
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${block.id}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${block.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="danger"
+                        size="sm"
+                        data-cy="entityDeleteButton"
+                      >
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -118,6 +184,24 @@ export const Block = (props: RouteComponentProps<{ url: string }>) => {
           )
         )}
       </div>
+      {totalItems ? (
+        <div className={blockList && blockList.length > 0 ? '' : 'd-none'}>
+          <Row className="justify-content-center">
+            <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage} i18nEnabled />
+          </Row>
+          <Row className="justify-content-center">
+            <JhiPagination
+              activePage={paginationState.activePage}
+              onSelect={handlePagination}
+              maxButtons={5}
+              itemsPerPage={paginationState.itemsPerPage}
+              totalItems={totalItems}
+            />
+          </Row>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };

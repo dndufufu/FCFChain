@@ -36,3 +36,6 @@ relationship OneToMany{
 
     Block{transaction} to Transaction{block required}
 }
+
+paginate Transaction with pagination
+paginate Block with pagination

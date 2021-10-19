@@ -20,7 +20,7 @@ export const TransactionDeleteDialog = (props: RouteComponentProps<{ id: string 
   const updateSuccess = useAppSelector(state => state.transaction.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/transaction');
+    props.history.push('/transaction' + props.location.search);
   };
 
   useEffect(() => {

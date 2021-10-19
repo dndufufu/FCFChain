@@ -11,6 +11,7 @@ const initialState: EntityState<ITransaction> = {
   entities: [],
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false,
 };
 
@@ -19,7 +20,7 @@ const apiUrl = 'api/transactions';
 // Actions
 
 export const getEntities = createAsyncThunk('transaction/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<ITransaction[]>(requestUrl);
 });
 
@@ -94,6 +95,7 @@ export const TransactionSlice = createEntitySlice({
           ...state,
           loading: false,
           entities: action.payload.data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {

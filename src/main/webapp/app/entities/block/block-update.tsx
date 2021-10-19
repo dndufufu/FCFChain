@@ -21,7 +21,7 @@ export const BlockUpdate = (props: RouteComponentProps<{ id: string }>) => {
   const updateSuccess = useAppSelector(state => state.block.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/block');
+    props.history.push('/block' + props.location.search);
   };
 
   useEffect(() => {
