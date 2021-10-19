@@ -35,7 +35,7 @@
     "entitySuffix": "",
     "reactive": false,
     "applicationIndex": 0,
-    "entities": [],
+    "entities": ["TransactionOutput", "TransactionInput", "Block", "Transaction", "Wallet"],
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
     "blueprints": [],
@@ -43,6 +43,7 @@
     "pages": [],
     "creationTimestamp": 1634606388979,
     "jwtSecretKey": "OWNiMDA2MDk2ZTg1ZmI2MjQyMGQ2MjMxNDQ3MDVhYTAzMjI0ZDZlYzIyYThjNTk4NTlmNTYzNmZhMzlmZDVlYzRiYzliNjIwNDg5YmE4NzhjMTMwMmY2MDMwYTJjZjcxZTRhNmViMjgxMzNlZmJhNzE5NTAwYmVjNDU4NDg0Yzc=",
-    "devServerPort": 9060
+    "devServerPort": 9060,
+    "lastLiquibaseTimestamp": 1634606648000
   }
 }

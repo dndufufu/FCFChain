@@ -1,0 +1,24 @@
+{
+  "name": "Wallet",
+  "fields": [
+    {
+      "fieldName": "privateKey",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "publicKey",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "wallet",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211019012408"
+}

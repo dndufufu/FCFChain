@@ -1,0 +1,29 @@
+{
+  "chainApp": {
+    "block": {
+      "home": {
+        "title": "Blocks",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "创建新 Block",
+        "createOrEditLabel": "创建或编辑 Block",
+        "notFound": "No Blocks found"
+      },
+      "created": "Block {{ param }} 创建成功",
+      "updated": "Block {{ param }} 更新成功",
+      "deleted": "Block {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Block {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Block"
+      },
+      "id": "ID",
+      "hash": "Hash",
+      "previousHash": "Previous Hash",
+      "merkleRoot": "Merkle Root",
+      "timestamp": "Timestamp",
+      "nonce": "Nonce",
+      "tradingVolume": "Trading Volume"
+    }
+  }
+}

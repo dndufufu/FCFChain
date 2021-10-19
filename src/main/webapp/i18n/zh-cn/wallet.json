@@ -1,0 +1,25 @@
+{
+  "chainApp": {
+    "wallet": {
+      "home": {
+        "title": "Wallets",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "创建新 Wallet",
+        "createOrEditLabel": "创建或编辑 Wallet",
+        "notFound": "No Wallets found"
+      },
+      "created": "Wallet {{ param }} 创建成功",
+      "updated": "Wallet {{ param }} 更新成功",
+      "deleted": "Wallet {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Wallet {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Wallet"
+      },
+      "id": "ID",
+      "privateKey": "Private Key",
+      "publicKey": "Public Key"
+    }
+  }
+}

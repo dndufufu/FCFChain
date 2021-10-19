@@ -1,0 +1,26 @@
+{
+  "chainApp": {
+    "transactionOutput": {
+      "home": {
+        "title": "Transaction Outputs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "创建新 Transaction Output",
+        "createOrEditLabel": "创建或编辑 Transaction Output",
+        "notFound": "No Transaction Outputs found"
+      },
+      "created": "Transaction Output {{ param }} 创建成功",
+      "updated": "Transaction Output {{ param }} 更新成功",
+      "deleted": "Transaction Output {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Transaction Output {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Transaction Output"
+      },
+      "id": "ID",
+      "recipient": "Recipient",
+      "value": "Value",
+      "parentTransactionId": "Parent Transaction Id"
+    }
+  }
+}

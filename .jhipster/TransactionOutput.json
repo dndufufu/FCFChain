@@ -1,0 +1,28 @@
+{
+  "name": "TransactionOutput",
+  "fields": [
+    {
+      "fieldName": "recipient",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "parentTransactionId",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "transaction_output",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211019012404"
+}

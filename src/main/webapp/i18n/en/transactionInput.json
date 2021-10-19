@@ -1,0 +1,25 @@
+{
+  "chainApp": {
+    "transactionInput": {
+      "home": {
+        "title": "Transaction Inputs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Transaction Input",
+        "createOrEditLabel": "Create or edit a Transaction Input",
+        "notFound": "No Transaction Inputs found"
+      },
+      "created": "A new Transaction Input is created with identifier {{ param }}",
+      "updated": "A Transaction Input is updated with identifier {{ param }}",
+      "deleted": "A Transaction Input is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Transaction Input {{ id }}?"
+      },
+      "detail": {
+        "title": "Transaction Input"
+      },
+      "id": "ID",
+      "transactionOutputId": "Transaction Output Id",
+      "uTXO": "U TXO"
+    }
+  }
+}

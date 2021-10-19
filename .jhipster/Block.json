@@ -1,0 +1,40 @@
+{
+  "name": "Block",
+  "fields": [
+    {
+      "fieldName": "hash",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "previousHash",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "merkleRoot",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "timestamp",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "nonce",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "tradingVolume",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "block",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211019012406"
+}

@@ -48,6 +48,11 @@ public class CacheConfiguration {
             createCache(cm, cn.com.fcf.chain.domain.User.class.getName());
             createCache(cm, cn.com.fcf.chain.domain.Authority.class.getName());
             createCache(cm, cn.com.fcf.chain.domain.User.class.getName() + ".authorities");
+            createCache(cm, cn.com.fcf.chain.domain.TransactionOutput.class.getName());
+            createCache(cm, cn.com.fcf.chain.domain.TransactionInput.class.getName());
+            createCache(cm, cn.com.fcf.chain.domain.Block.class.getName());
+            createCache(cm, cn.com.fcf.chain.domain.Transaction.class.getName());
+            createCache(cm, cn.com.fcf.chain.domain.Wallet.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

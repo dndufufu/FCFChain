@@ -1,0 +1,25 @@
+{
+  "chainApp": {
+    "transactionInput": {
+      "home": {
+        "title": "Transaction Inputs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "创建新 Transaction Input",
+        "createOrEditLabel": "创建或编辑 Transaction Input",
+        "notFound": "No Transaction Inputs found"
+      },
+      "created": "Transaction Input {{ param }} 创建成功",
+      "updated": "Transaction Input {{ param }} 更新成功",
+      "deleted": "Transaction Input {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Transaction Input {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Transaction Input"
+      },
+      "id": "ID",
+      "transactionOutputId": "Transaction Output Id",
+      "uTXO": "U TXO"
+    }
+  }
+}

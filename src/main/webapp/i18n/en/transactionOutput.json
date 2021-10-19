@@ -1,0 +1,26 @@
+{
+  "chainApp": {
+    "transactionOutput": {
+      "home": {
+        "title": "Transaction Outputs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Transaction Output",
+        "createOrEditLabel": "Create or edit a Transaction Output",
+        "notFound": "No Transaction Outputs found"
+      },
+      "created": "A new Transaction Output is created with identifier {{ param }}",
+      "updated": "A Transaction Output is updated with identifier {{ param }}",
+      "deleted": "A Transaction Output is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Transaction Output {{ id }}?"
+      },
+      "detail": {
+        "title": "Transaction Output"
+      },
+      "id": "ID",
+      "recipient": "Recipient",
+      "value": "Value",
+      "parentTransactionId": "Parent Transaction Id"
+    }
+  }
+}
