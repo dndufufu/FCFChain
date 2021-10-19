@@ -40,7 +40,7 @@ public class Block implements Serializable {
     private Instant timestamp;
 
     @Column(name = "nonce")
-    private Integer nonce;
+    private Integer nonce = 0;
 
     @Column(name = "trading_volume")
     private Integer tradingVolume;
