@@ -1,0 +1,24 @@
+application {
+  config {
+    baseName chain
+    applicationType monolith
+    authenticationType jwt
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework react
+    clientPackageManager npm
+    clientTheme none
+    clientThemeVariant primary
+    databaseType sql
+    devDatabaseType h2Disk
+    dtoSuffix DTO
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    languages [en, zh-cn]
+    messageBroker false
+    nativeLanguage en
+    packageName cn.com.fcf.chain
+    prodDatabaseType postgresql
+  }
+}

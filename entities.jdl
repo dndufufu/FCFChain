@@ -1,0 +1,33 @@
+entity TransactionOutput{
+    recipient String
+    value float
+    parentTransactionId String
+}
+
+entity TransactionInput{
+    transactionOutputId String
+    UTXO TransactionOutput
+}
+entity Block{
+   hash String
+   previousHash String
+   merkleRoot String
+   timestamp Instant
+   nonce Integer
+   tradingVolume Integer
+}
+
+entity Transaction{
+   hash String
+   sender String
+   reciepent String
+   value Float
+   signature String
+   timestamp Instant
+   status Boolean
+}
+
+entity Wallet{
+    privateKey String
+    publicKey String
+}
