@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,7 @@ public class WalletResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wallets")
-    public ResponseEntity<Wallet> createWallet(@RequestBody Wallet wallet) throws URISyntaxException {
+    public ResponseEntity<Wallet> createWallet(@Valid @RequestBody Wallet wallet) throws URISyntaxException {
         log.debug("REST request to save Wallet : {}", wallet);
         if (wallet.getId() != null) {
             throw new BadRequestAlertException("A new wallet cannot already have an ID", ENTITY_NAME, "idexists");
@@ -69,8 +71,10 @@ public class WalletResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wallets/{id}")
-    public ResponseEntity<Wallet> updateWallet(@PathVariable(value = "id", required = false) final Long id, @RequestBody Wallet wallet)
-        throws URISyntaxException {
+    public ResponseEntity<Wallet> updateWallet(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Wallet wallet
+    ) throws URISyntaxException {
         log.debug("REST request to update Wallet : {}, {}", id, wallet);
         if (wallet.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -104,7 +108,7 @@ public class WalletResource {
     @PatchMapping(value = "/wallets/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Wallet> partialUpdateWallet(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Wallet wallet
+        @NotNull @RequestBody Wallet wallet
     ) throws URISyntaxException {
         log.debug("REST request to partial update Wallet partially : {}, {}", id, wallet);
         if (wallet.getId() == null) {

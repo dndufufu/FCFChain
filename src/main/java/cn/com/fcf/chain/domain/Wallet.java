@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -34,7 +35,13 @@ public class Wallet implements Serializable {
     @Column(name = "public_key")
     private PublicKey publicKey;
 
+    @OneToOne(optional = false)
+    @NotNull
+    @JoinColumn(unique = true)
+    private User internalUser;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     @Transient
     private HashMap<String, TransactionOutput> UTXOs = new HashMap<>();
 
@@ -133,6 +140,19 @@ public class Wallet implements Serializable {
 
     public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public User getInternalUser() {
+        return this.internalUser;
+    }
+
+    public void setInternalUser(User user) {
+        this.internalUser = user;
+    }
+
+    public Wallet internalUser(User user) {
+        this.setInternalUser(user);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

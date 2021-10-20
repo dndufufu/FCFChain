@@ -10,7 +10,16 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "wallet",
+      "relationshipValidateRules": "required",
+      "relationshipName": "internalUser",
+      "ownerSide": true
+    }
+  ],
   "entityTableName": "wallet",
   "dto": "no",
   "pagination": "no",

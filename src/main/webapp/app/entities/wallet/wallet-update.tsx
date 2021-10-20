@@ -4,6 +4,8 @@ import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { IUser } from 'app/shared/model/user.model';
+import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './wallet.reducer';
 import { IWallet } from 'app/shared/model/wallet.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -15,6 +17,7 @@ export const WalletUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
+  const users = useAppSelector(state => state.userManagement.users);
   const walletEntity = useAppSelector(state => state.wallet.entity);
   const loading = useAppSelector(state => state.wallet.loading);
   const updating = useAppSelector(state => state.wallet.updating);
@@ -30,6 +33,8 @@ export const WalletUpdate = (props: RouteComponentProps<{ id: string }>) => {
     } else {
       dispatch(getEntity(props.match.params.id));
     }
+
+    dispatch(getUsers({}));
   }, []);
 
   useEffect(() => {
@@ -42,6 +47,7 @@ export const WalletUpdate = (props: RouteComponentProps<{ id: string }>) => {
     const entity = {
       ...walletEntity,
       ...values,
+      internalUser: users.find(it => it.id.toString() === values.internalUserId.toString()),
     };
 
     if (isNew) {
@@ -56,6 +62,7 @@ export const WalletUpdate = (props: RouteComponentProps<{ id: string }>) => {
       ? {}
       : {
           ...walletEntity,
+          internalUserId: walletEntity?.internalUser?.id,
         };
 
   return (
@@ -97,6 +104,26 @@ export const WalletUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="publicKey"
                 type="text"
               />
+              <ValidatedField
+                id="wallet-internalUser"
+                name="internalUserId"
+                data-cy="internalUser"
+                label={translate('chainApp.wallet.internalUser')}
+                type="select"
+                required
+              >
+                <option value="" key="0" />
+                {users
+                  ? users.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <FormText>
+                <Translate contentKey="entity.validation.required">This field is required.</Translate>
+              </FormText>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/wallet" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

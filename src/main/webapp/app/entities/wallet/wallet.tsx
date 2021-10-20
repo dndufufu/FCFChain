@@ -55,6 +55,9 @@ export const Wallet = (props: RouteComponentProps<{ url: string }>) => {
                 <th>
                   <Translate contentKey="chainApp.wallet.publicKey">Public Key</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="chainApp.wallet.internalUser">Internal User</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -68,6 +71,7 @@ export const Wallet = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{wallet.privateKey}</td>
                   <td>{wallet.publicKey}</td>
+                  <td>{wallet.internalUser ? wallet.internalUser.id : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${wallet.id}`} color="info" size="sm" data-cy="entityDetailsButton">

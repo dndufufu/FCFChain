@@ -41,6 +41,10 @@ export const WalletDetail = (props: RouteComponentProps<{ id: string }>) => {
             </span>
           </dt>
           <dd>{walletEntity.publicKey}</dd>
+          <dt>
+            <Translate contentKey="chainApp.wallet.internalUser">Internal User</Translate>
+          </dt>
+          <dd>{walletEntity.internalUser ? walletEntity.internalUser.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/wallet" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

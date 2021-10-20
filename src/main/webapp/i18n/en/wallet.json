@@ -19,7 +19,8 @@
       },
       "id": "ID",
       "privateKey": "Private Key",
-      "publicKey": "Public Key"
+      "publicKey": "Public Key",
+      "internalUser": "Internal User"
     }
   }
 }

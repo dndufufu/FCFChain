@@ -39,6 +39,10 @@ relationship OneToMany{
     Transaction{transactionOutput} to TransactionOutput{transaction required}
 }
 
+relationship OneToOne{
+    Wallet{internalUser required} to User
+}
+
 paginate Transaction with pagination
 paginate Block with pagination
 paginate TransactionInput with pagination
