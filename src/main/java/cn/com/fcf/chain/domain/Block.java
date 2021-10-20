@@ -47,7 +47,7 @@ public class Block implements Serializable {
 
     @OneToMany(mappedBy = "block")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "block" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "transactionInputs", "transactionOutputs", "block" }, allowSetters = true)
     private List<Transaction> transactions = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

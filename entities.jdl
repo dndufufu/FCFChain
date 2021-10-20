@@ -35,7 +35,11 @@ entity Wallet{
 relationship OneToMany{
 
     Block{transaction} to Transaction{block required}
+    Transaction{transactionInput} to TransactionInput{transaction required}
+    Transaction{transactionOutput} to TransactionOutput{transaction required}
 }
 
 paginate Transaction with pagination
 paginate Block with pagination
+paginate TransactionInput with pagination
+paginate TransactionOutput with pagination

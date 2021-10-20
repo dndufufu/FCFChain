@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import { ITransactionInput } from 'app/shared/model/transaction-input.model';
+import { ITransactionOutput } from 'app/shared/model/transaction-output.model';
 import { IBlock } from 'app/shared/model/block.model';
 
 export interface ITransaction {
@@ -10,6 +12,8 @@ export interface ITransaction {
   signature?: string | null;
   timestamp?: string | null;
   status?: boolean | null;
+  transactionInputs?: ITransactionInput[] | null;
+  transactionOutputs?: ITransactionOutput[] | null;
   block?: IBlock;
 }
 

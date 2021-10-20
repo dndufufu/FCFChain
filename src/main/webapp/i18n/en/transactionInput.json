@@ -19,7 +19,8 @@
       },
       "id": "ID",
       "transactionOutputId": "Transaction Output Id",
-      "uTXO": "U TXO"
+      "uTXO": "U TXO",
+      "transaction": "Transaction"
     }
   }
 }

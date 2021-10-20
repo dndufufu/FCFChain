@@ -8,13 +8,21 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -46,7 +54,7 @@ public class TransactionOutputResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/transaction-outputs")
-    public ResponseEntity<TransactionOutput> createTransactionOutput(@RequestBody TransactionOutput transactionOutput)
+    public ResponseEntity<TransactionOutput> createTransactionOutput(@Valid @RequestBody TransactionOutput transactionOutput)
         throws URISyntaxException {
         log.debug("REST request to save TransactionOutput : {}", transactionOutput);
         if (transactionOutput.getId() != null) {
@@ -72,7 +80,7 @@ public class TransactionOutputResource {
     @PutMapping("/transaction-outputs/{id}")
     public ResponseEntity<TransactionOutput> updateTransactionOutput(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody TransactionOutput transactionOutput
+        @Valid @RequestBody TransactionOutput transactionOutput
     ) throws URISyntaxException {
         log.debug("REST request to update TransactionOutput : {}, {}", id, transactionOutput);
         if (transactionOutput.getId() == null) {
@@ -107,7 +115,7 @@ public class TransactionOutputResource {
     @PatchMapping(value = "/transaction-outputs/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<TransactionOutput> partialUpdateTransactionOutput(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody TransactionOutput transactionOutput
+        @NotNull @RequestBody TransactionOutput transactionOutput
     ) throws URISyntaxException {
         log.debug("REST request to partial update TransactionOutput partially : {}, {}", id, transactionOutput);
         if (transactionOutput.getId() == null) {
@@ -149,12 +157,15 @@ public class TransactionOutputResource {
     /**
      * {@code GET  /transaction-outputs} : get all the transactionOutputs.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of transactionOutputs in body.
      */
     @GetMapping("/transaction-outputs")
-    public List<TransactionOutput> getAllTransactionOutputs() {
-        log.debug("REST request to get all TransactionOutputs");
-        return transactionOutputRepository.findAll();
+    public ResponseEntity<List<TransactionOutput>> getAllTransactionOutputs(Pageable pageable) {
+        log.debug("REST request to get a page of TransactionOutputs");
+        Page<TransactionOutput> page = transactionOutputRepository.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

@@ -20,7 +20,8 @@
       "id": "ID",
       "recipient": "Recipient",
       "value": "Value",
-      "parentTransactionId": "Parent Transaction Id"
+      "parentTransactionId": "Parent Transaction Id",
+      "transaction": "Transaction"
     }
   }
 }

@@ -1,7 +1,10 @@
 package cn.com.fcf.chain.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.security.PublicKey;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -22,13 +25,18 @@ public class TransactionOutput implements Serializable {
     private Long id;
 
     @Column(name = "recipient")
-    private String recipient;
+    private PublicKey recipient;
 
     @Column(name = "value")
     private Double value;
 
     @Column(name = "parent_transaction_id")
     private String parentTransactionId;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "transactionInputs", "transactionOutputs", "block" }, allowSetters = true)
+    private Transaction transaction;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -45,16 +53,16 @@ public class TransactionOutput implements Serializable {
         this.id = id;
     }
 
-    public String getRecipient() {
+    public PublicKey getRecipient() {
         return this.recipient;
     }
 
-    public TransactionOutput recipient(String recipient) {
+    public TransactionOutput recipient(PublicKey recipient) {
         this.setRecipient(recipient);
         return this;
     }
 
-    public void setRecipient(String recipient) {
+    public void setRecipient(PublicKey recipient) {
         this.recipient = recipient;
     }
 
@@ -82,6 +90,19 @@ public class TransactionOutput implements Serializable {
 
     public void setParentTransactionId(String parentTransactionId) {
         this.parentTransactionId = parentTransactionId;
+    }
+
+    public Transaction getTransaction() {
+        return this.transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
+    public TransactionOutput transaction(Transaction transaction) {
+        this.setTransaction(transaction);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

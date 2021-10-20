@@ -2,7 +2,10 @@ package cn.com.fcf.chain.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.security.PublicKey;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -28,22 +31,32 @@ public class Transaction implements Serializable {
     private String hash;
 
     @Column(name = "sender")
-    private String sender;
+    private PublicKey sender;
 
     @Column(name = "recipient")
-    private String recipient;
+    private PublicKey recipient;
 
     @Column(name = "value")
     private Double value;
 
     @Column(name = "signature")
-    private String signature;
+    private byte[] signature;
 
     @Column(name = "timestamp")
     private Instant timestamp;
 
     @Column(name = "status")
     private Boolean status;
+
+    @OneToMany(mappedBy = "transaction")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "transaction" }, allowSetters = true)
+    private List<TransactionInput> transactionInputs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "transaction")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "transaction" }, allowSetters = true)
+    private List<TransactionOutput> transactionOutputs = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @NotNull
@@ -78,29 +91,29 @@ public class Transaction implements Serializable {
         this.hash = hash;
     }
 
-    public String getSender() {
+    public PublicKey getSender() {
         return this.sender;
     }
 
-    public Transaction sender(String sender) {
+    public Transaction sender(PublicKey sender) {
         this.setSender(sender);
         return this;
     }
 
-    public void setSender(String sender) {
+    public void setSender(PublicKey sender) {
         this.sender = sender;
     }
 
-    public String getRecipient() {
+    public PublicKey getRecipient() {
         return this.recipient;
     }
 
-    public Transaction recipient(String recipient) {
+    public Transaction recipient(PublicKey recipient) {
         this.setRecipient(recipient);
         return this;
     }
 
-    public void setRecipient(String recipient) {
+    public void setRecipient(PublicKey recipient) {
         this.recipient = recipient;
     }
 
@@ -117,16 +130,16 @@ public class Transaction implements Serializable {
         this.value = value;
     }
 
-    public String getSignature() {
+    public byte[] getSignature() {
         return this.signature;
     }
 
-    public Transaction signature(String signature) {
+    public Transaction signature(byte[] signature) {
         this.setSignature(signature);
         return this;
     }
 
-    public void setSignature(String signature) {
+    public void setSignature(byte[] signature) {
         this.signature = signature;
     }
 
@@ -154,6 +167,68 @@ public class Transaction implements Serializable {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public List<TransactionInput> getTransactionInputs() {
+        return this.transactionInputs;
+    }
+
+    public void setTransactionInputs(List<TransactionInput> transactionInputs) {
+        if (this.transactionInputs != null) {
+            this.transactionInputs.forEach(i -> i.setTransaction(null));
+        }
+        if (transactionInputs != null) {
+            transactionInputs.forEach(i -> i.setTransaction(this));
+        }
+        this.transactionInputs = transactionInputs;
+    }
+
+    public Transaction transactionInputs(List<TransactionInput> transactionInputs) {
+        this.setTransactionInputs(transactionInputs);
+        return this;
+    }
+
+    public Transaction addTransactionInput(TransactionInput transactionInput) {
+        this.transactionInputs.add(transactionInput);
+        transactionInput.setTransaction(this);
+        return this;
+    }
+
+    public Transaction removeTransactionInput(TransactionInput transactionInput) {
+        this.transactionInputs.remove(transactionInput);
+        transactionInput.setTransaction(null);
+        return this;
+    }
+
+    public List<TransactionOutput> getTransactionOutputs() {
+        return this.transactionOutputs;
+    }
+
+    public void setTransactionOutputs(List<TransactionOutput> transactionOutputs) {
+        if (this.transactionOutputs != null) {
+            this.transactionOutputs.forEach(i -> i.setTransaction(null));
+        }
+        if (transactionOutputs != null) {
+            transactionOutputs.forEach(i -> i.setTransaction(this));
+        }
+        this.transactionOutputs = transactionOutputs;
+    }
+
+    public Transaction transactionOutputs(List<TransactionOutput> transactionOutputs) {
+        this.setTransactionOutputs(transactionOutputs);
+        return this;
+    }
+
+    public Transaction addTransactionOutput(TransactionOutput transactionOutput) {
+        this.transactionOutputs.add(transactionOutput);
+        transactionOutput.setTransaction(this);
+        return this;
+    }
+
+    public Transaction removeTransactionOutput(TransactionOutput transactionOutput) {
+        this.transactionOutputs.remove(transactionOutput);
+        transactionOutput.setTransaction(null);
+        return this;
     }
 
     public Block getBlock() {

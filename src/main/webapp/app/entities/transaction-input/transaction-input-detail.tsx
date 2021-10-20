@@ -41,6 +41,10 @@ export const TransactionInputDetail = (props: RouteComponentProps<{ id: string }
             </span>
           </dt>
           <dd>{transactionInputEntity.uTXO}</dd>
+          <dt>
+            <Translate contentKey="chainApp.transactionInput.transaction">Transaction</Translate>
+          </dt>
+          <dd>{transactionInputEntity.transaction ? transactionInputEntity.transaction.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/transaction-input" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

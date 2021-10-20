@@ -25,6 +25,8 @@
       "signature": "Signature",
       "timestamp": "Timestamp",
       "status": "Status",
+      "transactionInput": "Transaction Input",
+      "transactionOutput": "Transaction Output",
       "block": "Block"
     }
   }

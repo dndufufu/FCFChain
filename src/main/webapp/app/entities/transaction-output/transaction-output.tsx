@@ -1,26 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import { Translate, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntities } from './transaction-output.reducer';
 import { ITransactionOutput } from 'app/shared/model/transaction-output.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) => {
   const dispatch = useAppDispatch();
 
+  const [paginationState, setPaginationState] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE, 'id'), props.location.search)
+  );
+
   const transactionOutputList = useAppSelector(state => state.transactionOutput.entities);
   const loading = useAppSelector(state => state.transactionOutput.loading);
+  const totalItems = useAppSelector(state => state.transactionOutput.totalItems);
+
+  const getAllEntities = () => {
+    dispatch(
+      getEntities({
+        page: paginationState.activePage - 1,
+        size: paginationState.itemsPerPage,
+        sort: `${paginationState.sort},${paginationState.order}`,
+      })
+    );
+  };
+
+  const sortEntities = () => {
+    getAllEntities();
+    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
+  };
 
   useEffect(() => {
-    dispatch(getEntities({}));
-  }, []);
+    sortEntities();
+  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(props.location.search);
+    const page = params.get('page');
+    const sort = params.get(SORT);
+    if (page && sort) {
+      const sortSplit = sort.split(',');
+      setPaginationState({
+        ...paginationState,
+        activePage: +page,
+        sort: sortSplit[0],
+        order: sortSplit[1],
+      });
+    }
+  }, [props.location.search]);
+
+  const sort = p => () => {
+    setPaginationState({
+      ...paginationState,
+      order: paginationState.order === ASC ? DESC : ASC,
+      sort: p,
+    });
+  };
+
+  const handlePagination = currentPage =>
+    setPaginationState({
+      ...paginationState,
+      activePage: currentPage,
+    });
 
   const handleSyncList = () => {
-    dispatch(getEntities({}));
+    sortEntities();
   };
 
   const { match } = props;
@@ -46,17 +100,21 @@ export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) =
           <Table responsive>
             <thead>
               <tr>
-                <th>
-                  <Translate contentKey="chainApp.transactionOutput.id">ID</Translate>
+                <th className="hand" onClick={sort('id')}>
+                  <Translate contentKey="chainApp.transactionOutput.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('recipient')}>
+                  <Translate contentKey="chainApp.transactionOutput.recipient">Recipient</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('value')}>
+                  <Translate contentKey="chainApp.transactionOutput.value">Value</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('parentTransactionId')}>
+                  <Translate contentKey="chainApp.transactionOutput.parentTransactionId">Parent Transaction Id</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  <Translate contentKey="chainApp.transactionOutput.recipient">Recipient</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="chainApp.transactionOutput.value">Value</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="chainApp.transactionOutput.parentTransactionId">Parent Transaction Id</Translate>
+                  <Translate contentKey="chainApp.transactionOutput.transaction">Transaction</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -72,6 +130,13 @@ export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) =
                   <td>{transactionOutput.recipient}</td>
                   <td>{transactionOutput.value}</td>
                   <td>{transactionOutput.parentTransactionId}</td>
+                  <td>
+                    {transactionOutput.transaction ? (
+                      <Link to={`transaction/${transactionOutput.transaction.id}`}>{transactionOutput.transaction.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${transactionOutput.id}`} color="info" size="sm" data-cy="entityDetailsButton">
@@ -82,7 +147,7 @@ export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) =
                       </Button>
                       <Button
                         tag={Link}
-                        to={`${match.url}/${transactionOutput.id}/edit`}
+                        to={`${match.url}/${transactionOutput.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
                         color="primary"
                         size="sm"
                         data-cy="entityEditButton"
@@ -94,7 +159,7 @@ export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) =
                       </Button>
                       <Button
                         tag={Link}
-                        to={`${match.url}/${transactionOutput.id}/delete`}
+                        to={`${match.url}/${transactionOutput.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
                         color="danger"
                         size="sm"
                         data-cy="entityDeleteButton"
@@ -118,6 +183,24 @@ export const TransactionOutput = (props: RouteComponentProps<{ url: string }>) =
           )
         )}
       </div>
+      {totalItems ? (
+        <div className={transactionOutputList && transactionOutputList.length > 0 ? '' : 'd-none'}>
+          <Row className="justify-content-center">
+            <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage} i18nEnabled />
+          </Row>
+          <Row className="justify-content-center">
+            <JhiPagination
+              activePage={paginationState.activePage}
+              onSelect={handlePagination}
+              maxButtons={5}
+              itemsPerPage={paginationState.itemsPerPage}
+              totalItems={totalItems}
+            />
+          </Row>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };

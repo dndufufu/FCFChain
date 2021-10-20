@@ -1,11 +1,11 @@
-id;transaction_output_id;u_txo
-1;ability;Metrics
-2;invoice red;Wooden
-3;programming Wooden;Generic
-4;Soft;Flats Sleek Account
-5;Palau exploit;target
-6;Legacy;Technician Producer Rest
-7;hacking Buckinghamshire;Small withdrawal Director
-8;Hat olive;transmit software
-9;Kids;Practical Toys Africa
-10;Florida Developer Representative;Direct
+id;transaction_output_id;u_txo;transaction_id
+1;ability;Metrics;1
+2;invoice red;Wooden;2
+3;programming Wooden;Generic;3
+4;Soft;Flats Sleek Account;4
+5;Palau exploit;target;5
+6;Legacy;Technician Producer Rest;6
+7;hacking Buckinghamshire;Small withdrawal Director;7
+8;Hat olive;transmit software;8
+9;Kids;Practical Toys Africa;9
+10;Florida Developer Representative;Direct;10

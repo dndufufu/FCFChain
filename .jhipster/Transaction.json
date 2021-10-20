@@ -32,6 +32,18 @@
   ],
   "relationships": [
     {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "transactionInput",
+      "otherEntityRelationshipName": "transaction",
+      "relationshipName": "transactionInput"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "transactionOutput",
+      "otherEntityRelationshipName": "transaction",
+      "relationshipName": "transactionOutput"
+    },
+    {
       "relationshipType": "many-to-one",
       "otherEntityName": "block",
       "otherEntityRelationshipName": "transaction",

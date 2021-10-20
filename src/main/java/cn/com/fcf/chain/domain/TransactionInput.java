@@ -1,7 +1,9 @@
 package cn.com.fcf.chain.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,6 +28,11 @@ public class TransactionInput implements Serializable {
 
     @Column(name = "u_txo")
     private String uTXO;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "transactionInputs", "transactionOutputs", "block" }, allowSetters = true)
+    private Transaction transaction;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -66,6 +73,19 @@ public class TransactionInput implements Serializable {
 
     public void setuTXO(String uTXO) {
         this.uTXO = uTXO;
+    }
+
+    public Transaction getTransaction() {
+        return this.transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
+    public TransactionInput transaction(Transaction transaction) {
+        this.setTransaction(transaction);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

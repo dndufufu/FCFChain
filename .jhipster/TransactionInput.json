@@ -10,10 +10,18 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "transaction",
+      "otherEntityRelationshipName": "transactionInput",
+      "relationshipValidateRules": "required",
+      "relationshipName": "transaction"
+    }
+  ],
   "entityTableName": "transaction_input",
   "dto": "no",
-  "pagination": "no",
+  "pagination": "pagination",
   "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
