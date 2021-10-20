@@ -26,8 +26,8 @@ public class TransactionInput implements Serializable {
     @Column(name = "transaction_output_id")
     private String transactionOutputId;
 
-    @Column(name = "u_txo")
-    private String uTXO;
+    //    @Column(name = "u_txo")
+    private TransactionOutput uTXO;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -35,6 +35,10 @@ public class TransactionInput implements Serializable {
     private Transaction transaction;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public TransactionInput(String transactionOutputId) {
+        this.transactionOutputId = transactionOutputId;
+    }
 
     public Long getId() {
         return this.id;
@@ -62,16 +66,17 @@ public class TransactionInput implements Serializable {
         this.transactionOutputId = transactionOutputId;
     }
 
-    public String getuTXO() {
+    @OneToOne
+    public TransactionOutput getuTXO() {
         return this.uTXO;
     }
 
-    public TransactionInput uTXO(String uTXO) {
+    public TransactionInput uTXO(TransactionOutput uTXO) {
         this.setuTXO(uTXO);
         return this;
     }
 
-    public void setuTXO(String uTXO) {
+    public void setuTXO(TransactionOutput uTXO) {
         this.uTXO = uTXO;
     }
 

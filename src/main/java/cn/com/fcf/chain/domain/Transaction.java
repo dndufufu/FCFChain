@@ -1,7 +1,10 @@
 package cn.com.fcf.chain.domain;
 
+import cn.com.fcf.chain.util.StringUtil;
+import cn.com.fcf.chain.web.rest.MineBlock;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -48,6 +51,8 @@ public class Transaction implements Serializable {
     @Column(name = "status")
     private Boolean status;
 
+    private static int sequence = 0;
+
     @OneToMany(mappedBy = "transaction")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "transaction" }, allowSetters = true)
@@ -62,6 +67,15 @@ public class Transaction implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = { "transactions" }, allowSetters = true)
     private Block block;
+
+    public Transaction(PublicKey from, PublicKey to, Double value, List<TransactionInput> inputs) {
+        this.sender = from;
+        this.recipient = to;
+        this.value = value;
+        this.transactionInputs = inputs;
+    }
+
+    public Transaction() {}
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -276,5 +290,75 @@ public class Transaction implements Serializable {
             ", timestamp='" + getTimestamp() + "'" +
             ", status='" + getStatus() + "'" +
             "}";
+    }
+
+    public boolean processTransaction() {
+        if (verifySignature() == false) {
+            System.out.println("#Transaction Signature failed to verify");
+            return false;
+        }
+
+        //Gathers transaction inputs (Making sure they are unspent)
+        for (TransactionInput input : transactionInputs) {
+            input.setuTXO(MineBlock.UTXOs.get(input.getTransactionOutputId()));
+        }
+
+        //checks if transaction is valid
+        if (getInputsValue() < MineBlock.minimumTransaction) {
+            System.out.println("Transaction Inputs too small: " + getInputsValue());
+            System.out.println("Please enter the amount greater than" + MineBlock.minimumTransaction);
+            return false;
+        }
+
+        //Generate transaction outputs
+        Double leftOver = getInputsValue() - value;
+        hash = calculateHash();
+        transactionOutputs.add(new TransactionOutput(this.recipient, value, hash));
+        transactionOutputs.add(new TransactionOutput(this.sender, leftOver, hash));
+
+        //add outputs to Unspent list
+        for (TransactionOutput output : transactionOutputs) {
+            MineBlock.UTXOs.put(output.getTransactionOutputId(), output);
+        }
+
+        for (TransactionInput input : transactionInputs) {
+            if (input.getuTXO() == null) continue;
+            MineBlock.UTXOs.remove(input.getuTXO().getTransactionOutputId());
+        }
+
+        return true;
+    }
+
+    public Double getInputsValue() {
+        Double total = 0.0;
+        for (TransactionInput input : transactionInputs) {
+            if (input.getuTXO() == null) continue;
+            total += input.getuTXO().getValue();
+        }
+
+        return total;
+    }
+
+    public void generateSignature(PrivateKey privateKey) {
+        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient) + Double.toString(value);
+        signature = StringUtil.applyECDSASig(privateKey, data);
+    }
+
+    public boolean verifySignature() {
+        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient) + value;
+        return StringUtil.verifyECDSASig(sender, data, signature);
+    }
+
+    public Double getOutputsValue() {
+        Double total = 0.0;
+        for (TransactionOutput o : transactionOutputs) {
+            total += o.getValue();
+        }
+        return total;
+    }
+
+    private String calculateHash() {
+        sequence++;
+        return StringUtil.applySha256(StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient) + value + sequence);
     }
 }

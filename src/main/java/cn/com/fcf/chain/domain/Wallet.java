@@ -1,6 +1,13 @@
 package cn.com.fcf.chain.domain;
 
+import cn.com.fcf.chain.web.rest.MineBlock;
 import java.io.Serializable;
+import java.security.*;
+import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -22,12 +29,72 @@ public class Wallet implements Serializable {
     private Long id;
 
     @Column(name = "private_key")
-    private String privateKey;
+    private PrivateKey privateKey;
 
     @Column(name = "public_key")
-    private String publicKey;
+    private PublicKey publicKey;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+    @Transient
+    private HashMap<String, TransactionOutput> UTXOs = new HashMap<>();
+
+    public Wallet() {
+        generateKeyPair();
+    }
+
+    public void generateKeyPair() {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        try {
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA", "BC");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+            ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
+            // Initialize the key generator and generate a KeyPair
+            keyGen.initialize(ecSpec, random); //256
+            KeyPair keyPair = keyGen.generateKeyPair();
+            // Set the public and private keys from the keyPair
+            privateKey = keyPair.getPrivate();
+            publicKey = keyPair.getPublic();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Double getBalance() {
+        Double total = 0.0;
+        for (Map.Entry<String, TransactionOutput> item : MineBlock.UTXOs.entrySet()) {
+            TransactionOutput UTXO = item.getValue();
+            if (UTXO.isMine(publicKey)) {
+                UTXOs.put(UTXO.getTransactionOutputId(), UTXO);
+                total += UTXO.getValue();
+            }
+        }
+        return total;
+    }
+
+    public Transaction sendFounds(PublicKey _recipient, Double value) {
+        if (getBalance() < value) {
+            System.out.println("#Not Enough founds to send transaction. Transaction Discarded.");
+            return null;
+        }
+        List<TransactionInput> inputs = new ArrayList<>();
+
+        Double total = 0.0;
+        for (Map.Entry<String, TransactionOutput> item : UTXOs.entrySet()) {
+            TransactionOutput UTXO = item.getValue();
+            total += UTXO.getValue();
+            inputs.add(new TransactionInput(UTXO.getTransactionOutputId()));
+            if (total > value) break;
+        }
+
+        Transaction newTransaction = new Transaction(publicKey, _recipient, value, inputs);
+        newTransaction.generateSignature(privateKey);
+
+        for (TransactionInput input : inputs) {
+            UTXOs.remove(input.getTransactionOutputId());
+        }
+
+        return newTransaction;
+    }
 
     public Long getId() {
         return this.id;
@@ -42,29 +109,29 @@ public class Wallet implements Serializable {
         this.id = id;
     }
 
-    public String getPrivateKey() {
+    public PrivateKey getPrivateKey() {
         return this.privateKey;
     }
 
-    public Wallet privateKey(String privateKey) {
+    public Wallet privateKey(PrivateKey privateKey) {
         this.setPrivateKey(privateKey);
         return this;
     }
 
-    public void setPrivateKey(String privateKey) {
+    public void setPrivateKey(PrivateKey privateKey) {
         this.privateKey = privateKey;
     }
 
-    public String getPublicKey() {
+    public PublicKey getPublicKey() {
         return this.publicKey;
     }
 
-    public Wallet publicKey(String publicKey) {
+    public Wallet publicKey(PublicKey publicKey) {
         this.setPublicKey(publicKey);
         return this;
     }
 
-    public void setPublicKey(String publicKey) {
+    public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 

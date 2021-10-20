@@ -1,5 +1,6 @@
 package cn.com.fcf.chain.domain;
 
+import cn.com.fcf.chain.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.security.PublicKey;
@@ -24,6 +25,9 @@ public class TransactionOutput implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "transaction_output_id")
+    private String transactionOutputId;
+
     @Column(name = "recipient")
     private PublicKey recipient;
 
@@ -39,6 +43,33 @@ public class TransactionOutput implements Serializable {
     private Transaction transaction;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public TransactionOutput(PublicKey recipient, Double value, String parentTransactionId) {
+        this.recipient = recipient;
+        this.value = value;
+        this.parentTransactionId = parentTransactionId;
+        this.transactionOutputId =
+            StringUtil.applySha256(StringUtil.getStringFromKey(recipient) + Double.toString(value) + parentTransactionId);
+    }
+
+    public TransactionOutput() {}
+
+    public boolean isMine(PublicKey publicKey) {
+        return (publicKey == recipient);
+    }
+
+    public String getTransactionOutputId() {
+        return this.transactionOutputId;
+    }
+
+    public TransactionOutput TransactionOutputId(String transactionOutputId) {
+        this.setTransactionOutputId(transactionOutputId);
+        return this;
+    }
+
+    public void setTransactionOutputId(String transactionOutputId) {
+        this.transactionOutputId = transactionOutputId;
+    }
 
     public Long getId() {
         return this.id;
